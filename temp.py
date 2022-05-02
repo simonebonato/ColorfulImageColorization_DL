@@ -21,6 +21,6 @@ if __name__ == '__main__':
         validation_split=0.2,
         preprocessing_function=myFunc
     )
-
-    datagen.flow_from_directory(directory='data', target_size=(224, 224), class_mode=None)
+    path = r'C:\Users\simon\PycharmProjects\DeepLearningPython\GroupProject\test'
+    datagen.flow_from_directory(directory=path, target_size=(224, 224), class_mode=None)
 
