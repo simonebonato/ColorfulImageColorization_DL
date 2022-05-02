@@ -86,6 +86,7 @@ class CNN:
                     activation='relu',
                     padding='same' if P else 'valid',
                     name=label
+
                 ))
 
             if BN:
