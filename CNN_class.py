@@ -1,4 +1,3 @@
-
 import cv2
 import matplotlib.pyplot as plt
 import os
@@ -10,9 +9,7 @@ from tensorflow.keras.layers import Conv2D, BatchNormalization, Conv2DTranspose,
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import Sequential
 from adam_class import AdamWeightDecayOptimizer
-
-
-# from adam_class import *
+from tensorflow.keras.optimizers.schedules import ExponentialDecay, CosineDecay
 
 
 class CNN:
@@ -92,7 +89,8 @@ class CNN:
             if BN:
                 self.model.add(BatchNormalization(name=f'BN_{label[4]}'))
 
-        adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=3e-5, weight_decay_rate=10**-3)
+        lr = ExponentialDecay(initial_learning_rate=3e-5, decay_steps=10, decay_rate=0.01)
+        adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10**-3)
         self.model.compile(loss='categorical_crossentropy', optimizer=adam_weight)
         print(self.model.summary())
 
