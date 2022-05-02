@@ -1,4 +1,4 @@
-from keras.models import Sequential
+
 import cv2
 import matplotlib.pyplot as plt
 import os
@@ -6,9 +6,10 @@ from tqdm import tqdm
 import tensorflow as tf
 
 import numpy as np
-from keras.layers import Conv2D, BatchNormalization, Conv2DTranspose, Input
-from keras.models import Sequential
-from tensorflow.keras.optimizers import SGD, Adam
+from tensorflow.keras.layers import Conv2D, BatchNormalization, Conv2DTranspose, Input
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential
+from adam_class import AdamWeightDecayOptimizer
 
 
 # from adam_class import *
@@ -91,8 +92,8 @@ class CNN:
             if BN:
                 self.model.add(BatchNormalization(name=f'BN_{label[4]}'))
 
-        sgd = SGD(learning_rate=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-        self.model.compile(loss='categorical_crossentropy', optimizer=sgd)
+        adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=3e-5, weight_decay_rate=10**-3)
+        self.model.compile(loss='categorical_crossentropy', optimizer=adam_weight)
         print(self.model.summary())
 
     def train_val_split(self, train_p):
