@@ -123,3 +123,5 @@ class CNN:
         cv2.waitKey(0)
         # img = cv2.cvtColor(orig_img, cv2.COLOR_Lab2RGB)
         # plt.imshow(img / 255.0)
+
+    # change
