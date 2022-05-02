@@ -5,16 +5,16 @@ import os
 from tqdm import tqdm
 
 import numpy as np
-from keras.layers import Conv2D, BatchNormalization
+from keras.layers import Conv2D, BatchNormalization, Conv2DTranspose
 from keras.models import Sequential
 from tensorflow.keras.optimizers import SGD, Adam
-from adam_class import *
+
 
 
 class CNN:
     def __init__(self):
         print('-- Creating CNN model --')
-        self.load_images_from_folder(r'data\ILSVRC2015\Data\DET\test')
+        self.load_images_from_folder('data')
         self.model = Sequential()
         # layer structure (X, C, S, D, Sa, De, BN, L)
         # see Table 4 - page 24
