@@ -7,7 +7,7 @@ from tqdm import tqdm
 import numpy as np
 from keras.layers import Conv2D, BatchNormalization
 from keras.models import Sequential
-from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.optimizers import SGD, Adam
 
 
 class CNN:
