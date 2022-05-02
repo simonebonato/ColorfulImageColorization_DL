@@ -8,7 +8,7 @@ import numpy as np
 from keras.layers import Conv2D, BatchNormalization
 from keras.models import Sequential
 from tensorflow.keras.optimizers import SGD, Adam
-from adam import *
+from adam_class import *
 
 
 class CNN:
@@ -65,7 +65,7 @@ class CNN:
                 self.model.add(BatchNormalization())
 
         adam = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=3e-5, weight_decay_rate=10**-3)
-        self.model.compile(loss='categorical_crossentropy', optimizer=adam)
+        self.model.compile(loss='categorical_cross entropy', optimizer=adam)
 
     def train_val_split(self, train_p):
         pass
