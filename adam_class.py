@@ -88,7 +88,3 @@ class AdamWeightDecayOptimizer(tf.train.Optimizer):
         if m is not None:
             param_name = m.group(1)
         return param_name
-
-
-def hello():
-    print('HELLO')

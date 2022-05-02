@@ -8,6 +8,7 @@ import numpy as np
 from keras.layers import Conv2D, BatchNormalization, Conv2DTranspose
 from keras.models import Sequential
 from tensorflow.keras.optimizers import SGD, Adam
+from adam_class import *
 
 
 
