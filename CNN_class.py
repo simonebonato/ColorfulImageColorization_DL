@@ -134,8 +134,8 @@ class CNN:
             (28, 256, 1, 1, 8, 8, False, False),
             (28, 256, 1, 1, 8, 8, True, False),
 
-            # (56, 128, .5, 2, 4, 4, False, False),
-            (56, 128, 1, 2, 4, 4, False, False),
+            (56, 128, .5, 1, 4, 4, False, False),
+            (56, 128, 1, 1, 4, 4, False, False),
             (56, 128, 1, 1, 4, 4, False, True),
 
         )
