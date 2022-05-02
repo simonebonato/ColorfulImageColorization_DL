@@ -1,12 +1,13 @@
 from tensorflow import keras
 from keras.models import Sequential
-from keras.layers import Dense, Conv2D, Flatten, BatchNormalization
+from keras.layers import Dense, Conv2D, Flatten, BatchNormalization, Conv2DTranspose
+from tensorflow.keras.optimizers import SGD
 
 class CNN:
     def __init__(self):
         print('-- Creating CNN model --')
 
-        model = Sequential()
+        self.model = Sequential()
 
         # layer structure (X, C, S, D, Sa, De, BN, L)
         # see Table 4 - page 24
@@ -44,7 +45,7 @@ class CNN:
         )
 
         for (X, C, S, D, Sa, De, BN, L) in conv_layers:
-            model.add(Conv2D(
+            self.model.add(Conv2D(
                 filters=C,
                 kernel_size=X,
                 strides=S,
@@ -53,15 +54,12 @@ class CNN:
             ))
 
             if BN:
-                model.add(BatchNormalization())
+                self.model.add(BatchNormalization())
+
+        sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
+        self.model.compile(loss='categorical_crossentropy', optimizer=sgd)
 
     def train_val_split(self, train_p):
-        pass
-
-    def fit(self, X_train, Y_train, X_val, Y_val):
-        pass
-
-    def predict(self, X_test):
         pass
 
     def loss_function(self):
