@@ -104,23 +104,8 @@ class CNN:
     def loss_function(self):
         pass
 
-    def load_images_from_folder(self, folder):
-        print('-- Reading images --')
-        images = []
-        for filename in tqdm(os.listdir(folder)[:500]):
-            img = cv2.imread(os.path.join(folder, filename))
-            if img is not None:
-                img = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
-                # img = self.scale_resize_image(img)
-                images.append(img)
-        self.images = images
 
 
-    def plot_image(self, orig_img):
-        img = cv2.cvtColor(orig_img, cv2.COLOR_Lab2BGR)
-        cv2.imshow('here is your fuck*ng image', img)
-        cv2.waitKey(0)
-        # img = cv2.cvtColor(orig_img, cv2.COLOR_Lab2RGB)
-        # plt.imshow(img / 255.0)
+
 
 model = CNN()
