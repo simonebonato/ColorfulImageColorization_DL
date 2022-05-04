@@ -19,7 +19,7 @@ class CNN:
         self.model = Sequential()
         self.model.add(Input(
             shape=(256, 256, 1),
-            batch_size = 1,
+            batch_size=1,
             name='input',
         ))
 
@@ -73,7 +73,7 @@ class CNN:
                     strides=S,
                     dilation_rate=D,
                     activation='relu',
-                    padding='same', # if P else 'valid',
+                    padding='same',  # if P else 'valid',
                     name=label,
                     use_bias=True
                 ))
@@ -84,7 +84,7 @@ class CNN:
                     strides=int(1 / S),
                     dilation_rate=D,
                     activation='relu',
-                    padding='same', # if P else 'valid',
+                    padding='same',  # if P else 'valid',
                     name=label,
                     use_bias=True
                 ))
@@ -93,7 +93,7 @@ class CNN:
                 self.model.add(BatchNormalization(name=f'BN_{label[4]}'))
 
         lr = ExponentialDecay(initial_learning_rate=3e-5, decay_steps=10, decay_rate=0.01)
-        adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10**-3)
+        adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10 ** -3)
         self.model.compile(loss='categorical_crossentropy', optimizer=adam_weight)
         print(self.model.summary())
 
@@ -114,7 +114,6 @@ class CNN:
                 images.append(img)
         self.images = images
 
-
     def plot_image(self, orig_img):
         img = cv2.cvtColor(orig_img, cv2.COLOR_Lab2BGR)
         cv2.imshow('here is your fuck*ng image', img)
@@ -122,5 +121,5 @@ class CNN:
         # img = cv2.cvtColor(orig_img, cv2.COLOR_Lab2RGB)
         # plt.imshow(img / 255.0)
 
-m = CNN()
 
+m = CNN()
