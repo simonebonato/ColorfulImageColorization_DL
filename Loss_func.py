@@ -1,6 +1,5 @@
 import numpy as np
 from scipy.ndimage import gaussian_filter
-from tensorflow.keras.losses import Loss
 
 def v(Z_h_w):
     # Uniform distribution parameter

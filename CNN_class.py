@@ -5,7 +5,7 @@ from tqdm import tqdm
 import tensorflow as tf
 
 import numpy as np
-from tensorflow.keras.layers import Conv2D, BatchNormalization, Conv2DTranspose, Input
+from tensorflow.keras.layers import Conv2D, BatchNormalization, Conv2DTranspose, InputLayer
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import Sequential
 from adam_class import AdamWeightDecayOptimizer
@@ -18,8 +18,8 @@ class CNN:
         print('-- Creating CNN model --')
         # self.load_images_from_folder('data')
         self.model = Sequential()
-        self.model.add(Input(
-            shape=(256, 256, 1),
+        self.model.add(InputLayer(
+            input_shape=(256, 256, 1),
             batch_size=1,
             name='input',
         ))
