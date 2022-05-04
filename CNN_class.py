@@ -10,13 +10,16 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import Sequential
 from adam_class import AdamWeightDecayOptimizer
 from tensorflow.keras.optimizers.schedules import ExponentialDecay, CosineDecay
+
 from Loss_func import *
+from image_gen import *
 
 
 class CNN:
     def __init__(self):
         print('-- Creating CNN model --')
         # self.load_images_from_folder('data')
+        self.train_gen = custom_data_gen('test', img_size=256, batch_size=1)
         self.model = Sequential()
         self.model.add(InputLayer(
             input_shape=(256, 256, 1),
@@ -98,14 +101,14 @@ class CNN:
         self.model.compile(loss=L_cl, optimizer=adam_weight)
         print(self.model.summary())
 
-    def train_val_split(self, train_p):
-        pass
-
-    def loss_function(self):
-        pass
-
 
 
 
 
 m = CNN()
+
+STEP_SIZE_TRAIN=m.train_gen.n//m.train_gen.batch_size
+m.model.fit_generator(
+    generator=m.train_gen,
+    steps_per_epoch=STEP_SIZE_TRAIN
+)

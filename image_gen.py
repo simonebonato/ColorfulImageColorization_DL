@@ -46,10 +46,6 @@ def custom_data_gen(path, img_size=256, batch_size=1):
 #     self.images = images
 
 
-
-
-
-
 # g = custom_data_gen('test')
 # for i in g:
 #     plot_image_from_Lab(i[0])
