@@ -123,4 +123,4 @@ class CNN:
         # img = cv2.cvtColor(orig_img, cv2.COLOR_Lab2RGB)
         # plt.imshow(img / 255.0)
 
-m = CNN()
+model = CNN()
