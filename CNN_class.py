@@ -10,6 +10,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import Sequential
 from adam_class import AdamWeightDecayOptimizer
 from tensorflow.keras.optimizers.schedules import ExponentialDecay, CosineDecay
+from Loss_func import *
 
 
 class CNN:
@@ -19,7 +20,7 @@ class CNN:
         self.model = Sequential()
         self.model.add(Input(
             shape=(256, 256, 1),
-            batch_size = 1,
+            batch_size=1,
             name='input',
         ))
 
@@ -57,15 +58,15 @@ class CNN:
             ('conv7_2', 512, 1, 1, 3, False),
             ('conv7_3', 512, 1, 1, 3, True),
 
-            ('conv8_1', 128, .5, 1, 4, False),
-            ('conv8_2', 128, 1, 1, 3, False),
-            ('conv8_3', 128, 1, 1, 3, False),
+            ('conv8_1', 256, .5, 1, 4, False),
+            ('conv8_2', 256, 1, 1, 3, False),
+            ('conv8_3', 256, 1, 1, 3, False),
 
             ('conv_out', 313, 1, 1, 1, False)
 
         )
 
-        for i, (label, C, S, D, K, BN) in enumerate(conv_layers):
+        for (label, C, S, D, K, BN) in conv_layers:
             if S >= 1:
                 self.model.add(Conv2D(
                     filters=C,
@@ -73,7 +74,7 @@ class CNN:
                     strides=S,
                     dilation_rate=D,
                     activation='relu',
-                    padding='same', # if P else 'valid',
+                    padding='same',  # if P else 'valid',
                     name=label,
                     use_bias=True
                 ))
@@ -84,7 +85,7 @@ class CNN:
                     strides=int(1 / S),
                     dilation_rate=D,
                     activation='relu',
-                    padding='same', # if P else 'valid',
+                    padding='same',  # if P else 'valid',
                     name=label,
                     use_bias=True
                 ))
@@ -93,8 +94,8 @@ class CNN:
                 self.model.add(BatchNormalization(name=f'BN_{label[4]}'))
 
         lr = ExponentialDecay(initial_learning_rate=3e-5, decay_steps=10, decay_rate=0.01)
-        adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10**-3)
-        self.model.compile(loss='categorical_crossentropy', optimizer=adam_weight)
+        adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10 ** -3)
+        self.model.compile(loss=L_cl, optimizer=adam_weight)
         print(self.model.summary())
 
     def train_val_split(self, train_p):
@@ -114,7 +115,6 @@ class CNN:
                 images.append(img)
         self.images = images
 
-
     def plot_image(self, orig_img):
         img = cv2.cvtColor(orig_img, cv2.COLOR_Lab2BGR)
         cv2.imshow('here is your fuck*ng image', img)
@@ -123,4 +123,3 @@ class CNN:
         # plt.imshow(img / 255.0)
 
 m = CNN()
-
