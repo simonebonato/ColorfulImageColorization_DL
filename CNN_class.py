@@ -20,7 +20,7 @@ class CNN:
         self.batch_size = batch_size
         print('-- Creating CNN model --')
         # self.load_images_from_folder('train')
-        self.train_gen = custom_data_gen('data', img_size=256, batch_size=self.batch_size)
+        self.train_gen = custom_data_gen('data/train', img_size=256, batch_size=self.batch_size)
         self.model = Sequential()
         self.model.add(InputLayer(
             input_shape=(256, 256, 1),
@@ -105,8 +105,8 @@ class CNN:
 
 m = CNN()
 
-STEP_SIZE_TRAIN = m.train_gen.n // m.train_gen.batch_size
-m.model.fit_generator(
-    generator=m.train_gen,
-    steps_per_epoch=STEP_SIZE_TRAIN
-)
+# STEP_SIZE_TRAIN = m.train_gen.n // m.train_gen.batch_size
+# m.model.fit_generator(
+#     generator=m.train_gen,
+#     steps_per_epoch=STEP_SIZE_TRAIN
+# )
