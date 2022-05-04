@@ -3,6 +3,7 @@ import numpy as np
 from PIL import Image
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
+import os
 
 from skimage import io, color
 
@@ -31,6 +32,23 @@ def custom_data_gen(path, img_size=256, batch_size=1):
                                             batch_size=batch_size,
                                             shuffle=False)
     return generator
+
+
+# def load_images_from_folder(self, folder):
+#     print('-- Reading images --')
+#     images = []
+#     for filename in os.listdir(folder)[:500]:
+#         img = cv2.imread(os.path.join(folder, filename))
+#         if img is not None:
+#             img = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
+#             # img = self.scale_resize_image(img)
+#             images.append(img)
+#     self.images = images
+
+
+
+
+
 
 # g = custom_data_gen('test')
 # for i in g:
