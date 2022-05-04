@@ -104,4 +104,5 @@ class CNN:
     def loss_function(self):
         pass
 
+
 model = CNN()
