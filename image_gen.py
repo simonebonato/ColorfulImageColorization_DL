@@ -24,12 +24,11 @@ def plot_image_from_Lab(img, grayscale=False):
     plt.show()
 
 
-def custom_data_gen(path):
+def custom_data_gen(path, img_size=256, batch_size=1):
     datagen = ImageDataGenerator(preprocessing_function=myFunc)
     generator = datagen.flow_from_directory(directory=path,
-                                            target_size=(224, 224),
-                                            class_mode=None,
-                                            batch_size=1,
+                                            target_size=(img_size, img_size),
+                                            batch_size=batch_size,
                                             shuffle=False)
     return generator
 

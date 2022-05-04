@@ -18,6 +18,7 @@ class CNN:
     def __init__(self):
         print('-- Creating CNN model --')
         # self.load_images_from_folder('data')
+        
         self.model = Sequential()
         self.model.add(Input(
             shape=(224, 224, 1),
