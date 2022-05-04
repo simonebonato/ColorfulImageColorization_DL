@@ -114,10 +114,6 @@ class CNN:
                 images.append(img)
         self.images = images
 
-    def scale_resize_image(self, image):
-        image = tf.image.convert_image_dtype(image, tf.float32)  # equivalent to dividing image pixels by 255
-        image = tf.image.resize(image, (224, 224))  # Resizing the image to 224x224 dimention
-        return image
 
     def plot_image(self, orig_img):
         img = cv2.cvtColor(orig_img, cv2.COLOR_Lab2BGR)
