@@ -115,6 +115,7 @@ class CNN:
                 images.append(img)
         self.images = images
 
+
     def plot_image(self, orig_img):
         img = cv2.cvtColor(orig_img, cv2.COLOR_Lab2BGR)
         cv2.imshow('here is your fuck*ng image', img)
