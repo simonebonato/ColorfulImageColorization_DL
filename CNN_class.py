@@ -16,14 +16,15 @@ from image_gen import *
 
 
 class CNN:
-    def __init__(self):
+    def __init__(self, batch_size=1):
+        self.batch_size = batch_size
         print('-- Creating CNN model --')
-        # self.load_images_from_folder('data')
-        self.train_gen = custom_data_gen('test', img_size=256, batch_size=1)
+        # self.load_images_from_folder('train')
+        self.train_gen = custom_data_gen('data', img_size=256, batch_size=self.batch_size)
         self.model = Sequential()
         self.model.add(InputLayer(
             input_shape=(256, 256, 1),
-            batch_size=1,
+            batch_size=self.batch_size,
             name='input',
         ))
 
@@ -102,12 +103,9 @@ class CNN:
         print(self.model.summary())
 
 
-
-
-
 m = CNN()
 
-STEP_SIZE_TRAIN=m.train_gen.n//m.train_gen.batch_size
+STEP_SIZE_TRAIN = m.train_gen.n // m.train_gen.batch_size
 m.model.fit_generator(
     generator=m.train_gen,
     steps_per_epoch=STEP_SIZE_TRAIN
