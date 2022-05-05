@@ -19,10 +19,14 @@ def get_ab(image):
     return lab
 
 
-def plot_image_from_Lab(img, grayscale=False):
+def plot_image_from_Lab(img, grayscale=False, from_L=False):
     """if we want to plot only the L channel
     then we have to set a and b to zero
     then convert to rgb and plot!"""
+    if from_L:
+        temp = np.zeros((img.shape[0], img.shape[1], 3))
+        temp[:, :, 0] = img[:, :, 0]
+        img = temp
     if grayscale:
         ab = img[:, :, 1:]
         img[:, :, 1:] = 0 * ab
@@ -80,10 +84,11 @@ class DataGenerator(keras.utils.data_utils.Sequence):
         # Generate data
         for i, ID in enumerate(imgs_path_temp):
             img = cv2.imread(ID)
+            img = img.astype("float32") / 255
             img = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
             img = cv2.resize(img, self.dim)
 
-            X[i, :, :] = img[:, :, 0]
+            X[i, :, :, 0] = img[:, :, 0]
             Y[i, :, :] = img[:, :, 1:]
         return X, Y
 
@@ -112,10 +117,10 @@ partition = {'train': (get_partitions(train_path, val_path))[0], 'val': (get_par
 params = {'dim': (256, 256),
           'batch_size': 10,
           'n_channels': (1, 2),
-          'shuffle': True}
+          'shuffle': False}
 
 training_generator = DataGenerator(partition['train'], **params)
 
 for i in training_generator:
-    print(i[1].shape)
+    plot_image_from_Lab(i[0][0], from_L=True)
     break
