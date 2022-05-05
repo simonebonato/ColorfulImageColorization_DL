@@ -1,5 +1,7 @@
 import numpy as np
 from scipy.ndimage import gaussian_filter
+from image_gen import load_images_from_folder
+import tqdm
 
 
 def v(Z_h_w):
@@ -80,7 +82,32 @@ def get_soft_encoding(image_ab, nn_finder, nb_q):
     y = y.reshape(h, w, nb_q)
     return y
 
-q_ab = np.load("data/pts_in_hull.npy")
-nb_q = q_ab.shape[0]
-print(q_ab)
-print(nb_q)
+
+def prob_to_point_est(Z, temperature=0.38):
+    # Z is a vector with dims [H, W, Q=313]
+    # each Q is a probability that the pixel has a specific gamut color
+    new_p = np.copy(Z)
+    colors = np.zeros(shape=(Z.shape[0], Z.shape[1], 1))
+    for h in range(Z.shape[0]):
+        for w in range(Z.shape[1]):
+            probs = Z[h, w, :]
+            new_p[h, w, :] = np.exp(np.log(probs) / temperature) / \
+                             np.sum(np.exp(np.log(probs) / temperature))
+            colors[h, w] = np.argmax(new_p[h, w, :])
+
+    return new_p, colors
+
+
+# q_ab = np.load("data/pts_in_hull.npy")
+# nb_q = q_ab.shape[0]
+# print(q_ab)
+# print(nb_q)
+
+probs = np.random.rand(256, 256, 313)
+for i in tqdm.tqdm(range(probs.shape[0])):
+    for y in range(probs.shape[1]):
+        probs[i, y, :] /= np.sum(probs[i, y, :])
+
+new_p, colors = prob_to_point_est(probs)
+print(new_p)
+print(colors[0, 0])
