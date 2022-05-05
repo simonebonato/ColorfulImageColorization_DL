@@ -110,17 +110,17 @@ class DataGenerator(keras.utils.data_utils.Sequence):
         return X, Y
 
 
-train_path = 'data/train'
-val_path = 'data/val'
-partition = {'train': (get_partitions(train_path, val_path))[0], 'val': (get_partitions(train_path, val_path))[1]}
+# train_path = 'data/train'
+# val_path = 'data/val'
+# partition = {'train': (get_partitions(train_path, val_path))[0], 'val': (get_partitions(train_path, val_path))[1]}
+#
+# params = {'dim': (256, 256),
+#           'batch_size': 10,
+#           'n_channels': (1, 2),
+#           'shuffle': False}
+#
+# training_generator = DataGenerator(partition['train'], **params)
 
-params = {'dim': (256, 256),
-          'batch_size': 10,
-          'n_channels': (1, 2),
-          'shuffle': False}
-
-training_generator = DataGenerator(partition['train'], **params)
-
-for i in training_generator:
-    plot_image_from_Lab(i[0][0], from_L=True)
-    break
+# for i in training_generator:
+#     plot_image_from_Lab(i[0][0], from_L=True)
+#     break
