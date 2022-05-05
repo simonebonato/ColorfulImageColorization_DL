@@ -132,12 +132,12 @@ def prob_to_point_est(Z, temperature=0.38):
 # nb_q = q_ab.shape[0]
 # print(q_ab)
 # print(nb_q)
-
-probs = np.random.rand(256, 256, 313)
-for i in tqdm.tqdm(range(probs.shape[0])):
-    for y in range(probs.shape[1]):
-        probs[i, y, :] /= np.sum(probs[i, y, :])
-
-new_p, colors = prob_to_point_est(probs)
-print(new_p)
-print(colors[0, 0])
+#
+# probs = np.random.rand(256, 256, 313)
+# for i in range(probs.shape[0]):
+#     for y in range(probs.shape[1]):
+#         probs[i, y, :] /= np.sum(probs[i, y, :])
+#
+# new_p, colors = prob_to_point_est(probs)
+# print(new_p)
+# print(colors[0, 0])
