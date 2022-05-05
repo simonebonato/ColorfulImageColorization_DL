@@ -7,7 +7,6 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.keras.layers import Conv2D, BatchNormalization, Conv2DTranspose, InputLayer
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.models import Sequential
 from adam_class import AdamWeightDecayOptimizer
 from tensorflow.keras.optimizers.schedules import ExponentialDecay, CosineDecay
 from Loss_func import *
@@ -16,8 +15,8 @@ from image_gen import *
 
 class CNN:
     def __init__(self):
-        print('-- Creating CNN model --')
-        # self.load_images_from_folder('data')
+        self.get_generators()
+
         self.model = Sequential()
         self.model.add(InputLayer(
             input_shape=(256, 256, 1),
@@ -99,14 +98,21 @@ class CNN:
         self.model.compile(loss=L_cl, optimizer=adam_weight)
         print(self.model.summary())
 
-    def train_val_split(self, train_p):
-        pass
-
-    def loss_function(self):
-        pass
 
 
+    def get_generators(self):
+        train_path = 'data/train'
+        val_path = 'data/val'
+        partition = {'train': (get_partitions(train_path, val_path))[0],
+                     'val': (get_partitions(train_path, val_path))[1]}
 
+        params = {'dim': (256, 256),
+                  'batch_size': 10,
+                  'n_channels': (1, 2),
+                  'shuffle': False}
+
+        self.training_generator = DataGenerator(partition['train'], **params)
+        self.validation_generator = DataGenerator(partition['val'], **params)
 
 
 m = CNN()
