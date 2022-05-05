@@ -8,7 +8,12 @@ import os
 from skimage import io, color
 
 
-def myFunc(image):
+def get_L(image):
+    lab = color.rgb2lab(np.float32(image) / 255.)
+    return lab
+
+
+def get_ab(image):
     lab = color.rgb2lab(np.float32(image) / 255.)
     return lab
 
@@ -19,18 +24,27 @@ def plot_image_from_Lab(img, grayscale=False):
     then convert to rgb and plot!"""
     if grayscale:
         ab = img[:, :, 1:]
-        img[:, :, 1:] = 0*ab
+        img[:, :, 1:] = 0 * ab
     img = color.lab2rgb(img)
     plt.imshow(img)
     plt.show()
 
 
 def custom_data_gen(path, img_size=256, batch_size=1):
-    datagen = ImageDataGenerator(preprocessing_function=myFunc)
-    generator = datagen.flow_from_directory(directory=path,
-                                            target_size=(img_size, img_size),
-                                            batch_size=batch_size,
-                                            shuffle=False)
+    x_datagen = ImageDataGenerator(preprocessing_function=get_L)
+    x_generator = x_datagen.flow_from_directory(directory=path,
+                                                target_size=(img_size, img_size),
+                                                batch_size=batch_size,
+                                                shuffle=False,
+                                                classes=None)
+
+    y_datagen = ImageDataGenerator(preprocessing_function=get_ab)
+    y_generator = y_datagen.flow_from_directory(directory=path,
+                                                target_size=(img_size, img_size),
+                                                batch_size=batch_size,
+                                                shuffle=False,
+                                                classes=None)
+    generator = zip(x_generator, y_generator)
     return generator
 
 
@@ -46,8 +60,8 @@ def custom_data_gen(path, img_size=256, batch_size=1):
 #     self.images = images
 
 
-# g = custom_data_gen('data')
-# for i in g:
-#     plot_image_from_Lab(i[0])
-#     plot_image_from_Lab(i[0], grayscale=True)
-#     break
+g = custom_data_gen('data/train')
+for image, label in g:
+    plot_image_from_Lab(image[0][0])
+    # print(label)
+    break

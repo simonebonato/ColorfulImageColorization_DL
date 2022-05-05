@@ -1,6 +1,8 @@
-a = np.random.rand(27)
-a = np.reshape(3, 3, 3)
+from image_gen import *
 
-for i in a.shape[0]:
-    for y in a.shape[1]:
-        a[i, y, :] =
+g = custom_data_gen('data/train', batch_size=1)
+for i in g:
+    print(i[0].shape)
+    plot_image_from_Lab(i[0][0])
+    plot_image_from_Lab(i[0][0], grayscale=True)
+    break

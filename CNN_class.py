@@ -23,7 +23,7 @@ class CNN:
         self.train_gen = custom_data_gen('data/train', img_size=256, batch_size=self.batch_size)
         self.model = Sequential()
         self.model.add(InputLayer(
-            input_shape=(256, 256, 1),
+            input_shape=(256, 256, 3),
             batch_size=self.batch_size,
             name='input',
         ))
@@ -67,7 +67,6 @@ class CNN:
             ('conv8_3', 256, 1, 1, 3, False),
 
             ('conv_out', 313, 1, 1, 1, False)
-
         )
 
         for (label, C, S, D, K, BN) in conv_layers:
@@ -105,8 +104,8 @@ class CNN:
 
 m = CNN()
 
-# STEP_SIZE_TRAIN = m.train_gen.n // m.train_gen.batch_size
-# m.model.fit_generator(
-#     generator=m.train_gen,
-#     steps_per_epoch=STEP_SIZE_TRAIN
-# )
+STEP_SIZE_TRAIN = m.train_gen.n // m.train_gen.batch_size
+m.model.fit_generator(
+    generator=m.train_gen,
+    steps_per_epoch=STEP_SIZE_TRAIN
+)
