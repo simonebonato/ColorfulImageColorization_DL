@@ -35,16 +35,16 @@ def plot_image_from_Lab(img, grayscale=False, from_L=False):
     plt.show()
 
 
-# def load_images_from_folder(self, folder):
-#     print('-- Reading images --')
-#     images = []
-#     for filename in os.listdir(folder)[:500]:
-#         img = cv2.imread(os.path.join(folder, filename))
-#         if img is not None:
-#             img = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
-#             # img = self.scale_resize_image(img)
-#             images.append(img)
-#     self.images = images
+def load_images_from_folder(folder):
+    images = []
+    for filename in os.listdir(folder)[:500]:
+        img = cv2.imread(os.path.join(folder, filename))
+        if img is not None:
+            img = img.astype("float32") / 255
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
+            img = cv2.resize(img, (256, 256))
+            images.append(img)
+    return images
 
 def get_partitions(train_path, val_path):
     from os import listdir
