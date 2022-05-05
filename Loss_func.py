@@ -79,3 +79,8 @@ def get_soft_encoding(image_ab, nn_finder, nb_q):
     y[idx_pts, idx_neigh] = wts
     y = y.reshape(h, w, nb_q)
     return y
+
+q_ab = np.load("data/pts_in_hull.npy")
+nb_q = q_ab.shape[0]
+print(q_ab)
+print(nb_q)
