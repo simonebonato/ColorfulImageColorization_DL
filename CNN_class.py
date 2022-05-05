@@ -11,6 +11,7 @@ from tensorflow.keras.models import Sequential
 from adam_class import AdamWeightDecayOptimizer
 from tensorflow.keras.optimizers.schedules import ExponentialDecay, CosineDecay
 from Loss_func import *
+from image_gen import *
 
 
 class CNN:
@@ -105,4 +106,7 @@ class CNN:
         pass
 
 
-model = CNN()
+
+
+
+m = CNN()
