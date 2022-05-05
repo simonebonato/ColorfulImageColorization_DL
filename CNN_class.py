@@ -14,13 +14,20 @@ from image_gen import *
 
 
 class CNN:
-    def __init__(self):
+    def __init__(self, input_shape=(256, 256), batch_size=1):
+        '''
+        input_shape: tuple indicating the desired shape of the input
+        batch_size: number of samples for each batch of training
+        '''
+        self.input_shape = input_shape
+        self.batch_size = batch_size
+
         self.get_generators()
 
         self.model = Sequential()
         self.model.add(InputLayer(
-            input_shape=(256, 256, 1),
-            batch_size=1,
+            input_shape=(*self.input_shape, 1),
+            batch_size=self.batch_size,
             name='input',
         ))
 
@@ -98,6 +105,9 @@ class CNN:
         self.model.compile(loss=L_cl, optimizer=adam_weight)
         print(self.model.summary())
 
+        self.model.fit_generator(generator=self.training_generator,
+                                 use_multiprocessing=True,
+                                 workers=4)
 
 
     def get_generators(self):
@@ -106,13 +116,14 @@ class CNN:
         partition = {'train': (get_partitions(train_path, val_path))[0],
                      'val': (get_partitions(train_path, val_path))[1]}
 
-        params = {'dim': (256, 256),
-                  'batch_size': 10,
+        params = {'dim': self.input_shape,
+                  'batch_size': self.batch_size,
                   'n_channels': (1, 2),
                   'shuffle': False}
 
         self.training_generator = DataGenerator(partition['train'], **params)
         self.validation_generator = DataGenerator(partition['val'], **params)
+
 
 
 m = CNN()
