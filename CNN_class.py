@@ -102,13 +102,12 @@ class CNN:
 
         lr = ExponentialDecay(initial_learning_rate=3e-5, decay_steps=10, decay_rate=0.01)
         adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10 ** -3)
-        self.model.compile(loss=L_cl, optimizer=adam_weight)
+        self.model.compile(loss=L_cl, optimizer=adam_weight, run_eagerly=True)
         print(self.model.summary())
 
-        self.model.fit_generator(generator=self.training_generator,
-                                 use_multiprocessing=True,
-                                 workers=4)
-
+        self.model.fit(x=self.training_generator,
+                       use_multiprocessing=True,
+                       workers=4)
 
     def get_generators(self):
         train_path = 'data/train'
@@ -125,5 +124,5 @@ class CNN:
         self.validation_generator = DataGenerator(partition['val'], **params)
 
 
-
-m = CNN()
+if __name__ == '__main__':
+    m = CNN()

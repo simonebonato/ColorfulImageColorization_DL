@@ -2,7 +2,7 @@ import cv2
 import keras.utils.data_utils
 import numpy as np
 from PIL import Image
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+# from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 import os
 
