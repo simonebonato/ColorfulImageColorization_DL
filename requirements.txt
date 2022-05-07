@@ -1,6 +1,6 @@
 numpy==1.19.5
 matplotlib==2.2.5
-tensorflow==2.5.0
+tensorflow==2.4.0
 tqdm
 opencv-python
 

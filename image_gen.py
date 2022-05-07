@@ -1,5 +1,5 @@
 import cv2
-import keras.utils.data_utils
+import tensorflow.keras.utils
 import numpy as np
 from PIL import Image
 # from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -54,7 +54,7 @@ def get_partitions(train_path, val_path):
     return train_imgs, val_imgs
 
 
-class DataGenerator(keras.utils.data_utils.Sequence):
+class DataGenerator(tensorflow.keras.utils.Sequence):
     def __init__(self, partition, batch_size=1, dim=(256, 256), n_channels=(1, 2), shuffle=True):
         '''
         partition: list with paths of images
