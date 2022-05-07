@@ -8,13 +8,13 @@ import numpy as np
 from tensorflow.keras.layers import Conv2D, BatchNormalization, Conv2DTranspose, InputLayer, UpSampling2D
 from tensorflow.keras.models import Sequential
 from adam_class import AdamWeightDecayOptimizer
-from tensorflow.keras.optimizers.schedules import ExponentialDecay, CosineDecay
+from tensorflow.keras.optimizers.schedules import ExponentialDecay
 from Loss_func import *
 from image_gen import *
 
 
 class CNN:
-    def __init__(self, input_shape=(256, 256), batch_size=1):
+    def __init__(self, input_shape=(256, 256), batch_size=4):
         '''
         input_shape: tuple indicating the desired shape of the input
         batch_size: number of samples for each batch of training
