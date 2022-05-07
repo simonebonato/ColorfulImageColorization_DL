@@ -55,33 +55,68 @@ def v(Z_h_w):
 
     return w[q_star]
 
+def v_copy(Z):
+    # Uniform distribution parameter
+    lambdaa = 0.5
+
+    # Gaussian Kernel width
+    sigma = 5
+
+    Q = 313
+    q_star = np.argmax(Z, axis = -1)
+
+    # Estimated probability distribution for colors
+    p = Z
+
+    # Smoothen distribution of estimated probability distribution for colors
+    p_hat = np.exp(-p ** 2 / (2 * sigma ** 2))
+    w = ((1 - lambdaa) * p_hat + lambdaa / Q) ** -1
+
+    # Normalize w so that expected value is 1
+    norm = np.zeros((Z.shape[0], Z.shape[1]))
+    for q in range(Q):
+        norm += p_hat[:, :, q] * w[:, :, q]
+        
+    norm = norm.reshape(Z.shape[0], Z.shape[1], 1)
+    norm = np.tile(norm, (1, 1, Z.shape[-1]))
+    w = w / norm
+    return w[q_star]
+
 
 def L_cl(y_true, y_pred):
     # y_true is HxWx2 (ab without L component of image), y_pred is HxWxQ (predicted prob distribution)
     """TODO: make sure this works for batches of data"""
     # print(f'y_true shape: {y_true.shape}')
     # print(f'y_pred shape: {y_pred.shape}')
+
     y_true = y_true[0]
     y_pred = y_pred[0]
-
+    
     # Load the array of quantized ab value
     q_ab = np.load("pts_in_hull.npy")
     nb_q = q_ab.shape[0]
 
     # Fit a NN to q_ab
     nn_finder = nn.NearestNeighbors(n_neighbors=5, algorithm='ball_tree').fit(q_ab)
-
     Z = soft_encoding(image_ab=y_true, nn_finder=nn_finder, nb_q=nb_q)
     Z_hat = y_pred
 
     sum2 = 0
+    # for h in range(Z.shape[0]):
+    #     for w in range(Z.shape[1]):
+    #         # sum3 = 0
+    #         # for q in range(Z.shape[2]):
+    #         #     sum3 += Z[h, w, q] * np.log(Z_hat[h, w, q])
 
+    #         sum3 = np.dot(Z[h, w], np.log(Z_hat[h, w]))
+    #         sum2 += v(Z_h_w=Z[h, w, :]) * sum3
+
+    tmp = v_copy(Z).reshape(Z.shape[0], Z.shape[1])
     for h in range(Z.shape[0]):
         for w in range(Z.shape[1]):
-            sum3 = 0
-            for q in range(Z.shape[2]):
-                sum3 += Z[h, w, q] * np.log(Z_hat[h, w, q])
-            sum2 += v(Z_h_w=Z[h, w, :]) * sum3
+            tmp[h, w] *= np.dot(Z[h, w], np.log(Z_hat[h, w]))
+    sum2 = np.sum(tmp)
+    
     return -1 * sum2
 
 

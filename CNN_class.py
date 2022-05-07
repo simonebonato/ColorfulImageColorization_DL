@@ -14,7 +14,7 @@ from image_gen import *
 
 
 class CNN:
-    def __init__(self, input_shape=(256, 256), batch_size=4):
+    def __init__(self, input_shape=(256, 256), batch_size=1):
         '''
         input_shape: tuple indicating the desired shape of the input
         batch_size: number of samples for each batch of training
