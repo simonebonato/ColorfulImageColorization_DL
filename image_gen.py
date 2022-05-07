@@ -5,7 +5,7 @@ from PIL import Image
 # from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 import os
-
+from Loss_func import *
 from skimage import io, color
 
 
@@ -63,10 +63,13 @@ class DataGenerator(keras.utils.data_utils.Sequence):
         '''
         'Initialization'
         self.dim = dim
+        self.out_dim = (dim[0] // 4, dim[1] // 4)
         self.batch_size = batch_size
         self.partition = partition
         self.n_channels = n_channels
         self.shuffle = shuffle
+        # Load the array of quantized ab value
+
         self.on_epoch_end()
 
     def on_epoch_end(self):
@@ -79,7 +82,7 @@ class DataGenerator(keras.utils.data_utils.Sequence):
         'Generates data containing batch_size samples'  # X : (n_samples, *dim, n_channels)
         # Initialization
         X = np.empty((self.batch_size, *self.dim, self.n_channels[0]))
-        Y = np.empty((self.batch_size, *self.dim, self.n_channels[1]))
+        Y = np.empty((self.batch_size, *self.out_dim, self.n_channels[1]))
 
         # Generate data
         for i, ID in enumerate(imgs_path_temp):
@@ -87,9 +90,9 @@ class DataGenerator(keras.utils.data_utils.Sequence):
             img = img.astype("float32") / 255
             img = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
             img = cv2.resize(img, self.dim)
-
             X[i, :, :, 0] = img[:, :, 0]
-            Y[i, :, :] = img[:, :, 1:]
+            out_img = cv2.resize(img, self.out_dim, cv2.INTER_CUBIC)
+            Y[i, :, :] = out_img[:, :, 1:]
         return X, Y
 
     def __len__(self):
@@ -120,7 +123,8 @@ class DataGenerator(keras.utils.data_utils.Sequence):
 #           'shuffle': False}
 #
 # training_generator = DataGenerator(partition['train'], **params)
-
+#
 # for i in training_generator:
-#     plot_image_from_Lab(i[0][0], from_L=True)
+#     print(i[0].shape)
+#     print(i[1].shape)
 #     break

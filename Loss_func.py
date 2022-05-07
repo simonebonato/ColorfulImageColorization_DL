@@ -4,11 +4,12 @@ import sklearn.neighbors as nn
 
 def soft_encoding(image_ab, nn_finder, nb_q):
     h, w = image_ab.shape[:2]
+    # print(f'image_ab shape: {image_ab.shape}')
     img_a = image_ab[:, :, 0]
     img_b = image_ab[:, :, 1]
 
-    a = np.ravel(img_a.numpy())
-    b = np.ravel(img_b.numpy())
+    a = np.ravel(img_a)
+    b = np.ravel(img_b)
     ab = np.vstack((a, b)).T
 
     # Get the distance to and the idx of the nearest neighbors
@@ -57,6 +58,11 @@ def v(Z_h_w):
 
 def L_cl(y_true, y_pred):
     # y_true is HxWx2 (ab without L component of image), y_pred is HxWxQ (predicted prob distribution)
+    """TODO: make sure this works for batches of data"""
+    # print(f'y_true shape: {y_true.shape}')
+    # print(f'y_pred shape: {y_pred.shape}')
+    y_true = y_true[0]
+    y_pred = y_pred[0]
 
     # Load the array of quantized ab value
     q_ab = np.load("pts_in_hull.npy")
@@ -97,9 +103,6 @@ def L_cl(y_true, y_pred):
 # print(L_cl(y_true=b, y_pred=a))
 
 
-
-
-
 def prob_to_point_est(Z, temperature=0.38):
     # Z is a vector with dims [H, W, Q=313]
     # each Q is a probability that the pixel has a specific gamut color
@@ -113,7 +116,6 @@ def prob_to_point_est(Z, temperature=0.38):
             colors[h, w] = np.argmax(new_p[h, w, :])
 
     return new_p, colors
-
 
 # q_ab = np.load("data/pts_in_hull.npy")
 # nb_q = q_ab.shape[0]
