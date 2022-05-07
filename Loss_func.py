@@ -55,6 +55,7 @@ def v(Z_h_w):
 
     return w[q_star]
 
+
 def v_copy(Z):
     # Uniform distribution parameter
     lambdaa = 0.5
@@ -63,7 +64,7 @@ def v_copy(Z):
     sigma = 5
 
     Q = 313
-    q_star = np.argmax(Z, axis = -1)
+    q_star = np.argmax(Z, axis=-1)
 
     # Estimated probability distribution for colors
     p = Z
@@ -76,11 +77,12 @@ def v_copy(Z):
     norm = np.zeros((Z.shape[0], Z.shape[1]))
     for q in range(Q):
         norm += p_hat[:, :, q] * w[:, :, q]
-        
+
     norm = norm.reshape(Z.shape[0], Z.shape[1], 1)
     norm = np.tile(norm, (1, 1, Z.shape[-1]))
     w = w / norm
-    return w[q_star]
+    q_star = np.reshape(q_star, newshape=(q_star.shape[0], q_star.shape[1], 1))
+    return np.take_along_axis(w, q_star, axis=-1)
 
 
 def L_cl(y_true, y_pred):
@@ -91,7 +93,7 @@ def L_cl(y_true, y_pred):
 
     y_true = y_true[0]
     y_pred = y_pred[0]
-    
+
     # Load the array of quantized ab value
     q_ab = np.load("pts_in_hull.npy")
     nb_q = q_ab.shape[0]
@@ -111,12 +113,14 @@ def L_cl(y_true, y_pred):
     #         sum3 = np.dot(Z[h, w], np.log(Z_hat[h, w]))
     #         sum2 += v(Z_h_w=Z[h, w, :]) * sum3
 
-    tmp = v_copy(Z).reshape(Z.shape[0], Z.shape[1])
+    tmp = v_copy(Z)
+    tmp = tmp.reshape(Z.shape[0], Z.shape[1])
+
     for h in range(Z.shape[0]):
         for w in range(Z.shape[1]):
             tmp[h, w] *= np.dot(Z[h, w], np.log(Z_hat[h, w]))
     sum2 = np.sum(tmp)
-    
+
     return -1 * sum2
 
 

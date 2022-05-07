@@ -3,4 +3,7 @@ matplotlib==2.2.5
 tensorflow==2.4.0
 tqdm
 opencv-python
+sklearn
+Pillow
+scikit-image
 
