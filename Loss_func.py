@@ -140,32 +140,3 @@ def L_cl(y_true, y_pred):
 # # print(f'b: {b}', '\n')
 # print(L_cl(y_true=a, y_pred=a))
 # print(L_cl(y_true=b, y_pred=a))
-
-
-def prob_to_point_est(Z, temperature=0.38):
-    # Z is a vector with dims [H, W, Q=313]
-    # each Q is a probability that the pixel has a specific gamut color
-    new_p = np.copy(Z)
-    colors = np.zeros(shape=(Z.shape[0], Z.shape[1], 1))
-    for h in range(Z.shape[0]):
-        for w in range(Z.shape[1]):
-            probs = Z[h, w, :]
-            new_p[h, w, :] = np.exp(np.log(probs) / temperature) / \
-                             np.sum(np.exp(np.log(probs) / temperature))
-            colors[h, w] = np.argmax(new_p[h, w, :])
-
-    return new_p, colors
-
-# q_ab = np.load("data/pts_in_hull.npy")
-# nb_q = q_ab.shape[0]
-# print(q_ab)
-# print(nb_q)
-#
-# probs = np.random.rand(256, 256, 313)
-# for i in range(probs.shape[0]):
-#     for y in range(probs.shape[1]):
-#         probs[i, y, :] /= np.sum(probs[i, y, :])
-#
-# new_p, colors = prob_to_point_est(probs)
-# print(new_p)
-# print(colors[0, 0])
