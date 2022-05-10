@@ -124,8 +124,8 @@ class CNN:
 
         model_saver = ModelCheckpoint(filepath='Best_Model', monitor='val_loss',
                                       save_best_only=True, mode='min')
-        self.model.fit(x=self.training_generator,
-                       epochs=5, callbacks=[model_saver])
+        self.model.fit(x=self.training_generator, epochs=5,
+                       validation_data=self.validation_generator, callbacks=[model_saver])
 
     def get_generators(self):
         train_path = 'data/train'
