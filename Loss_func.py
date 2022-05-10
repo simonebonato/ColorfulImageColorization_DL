@@ -86,13 +86,13 @@ def v_copy(Z):
 
 
 def L_cl(y_true, y_pred):
-    # y_true is HxWx2 (ab without L component of image), y_pred is HxWxQ (predicted prob distribution)
+    # y_true is batchsizexHxWx2 (ab without L component of image), y_pred is batchsizexHxWxQ (predicted prob distri)
     """TODO: make sure this works for batches of data"""
     # print(f'y_true shape: {y_true.shape}')
     # print(f'y_pred shape: {y_pred.shape}')
 
-    y_true = y_true[0]
-    y_pred = y_pred[0]
+    batch_size = y_true.shape[0]
+    loss = []
 
     # Load the array of quantized ab value
     q_ab = np.load("pts_in_hull.npy")
@@ -100,28 +100,32 @@ def L_cl(y_true, y_pred):
 
     # Fit a NN to q_ab
     nn_finder = nn.NearestNeighbors(n_neighbors=5, algorithm='ball_tree').fit(q_ab)
-    Z = soft_encoding(image_ab=y_true, nn_finder=nn_finder, nb_q=nb_q)
-    Z_hat = y_pred
 
-    sum2 = 0
-    # for h in range(Z.shape[0]):
-    #     for w in range(Z.shape[1]):
-    #         # sum3 = 0
-    #         # for q in range(Z.shape[2]):
-    #         #     sum3 += Z[h, w, q] * np.log(Z_hat[h, w, q])
+    for n in range(batch_size):
 
-    #         sum3 = np.dot(Z[h, w], np.log(Z_hat[h, w]))
-    #         sum2 += v(Z_h_w=Z[h, w, :]) * sum3
+        Z = soft_encoding(image_ab=y_true[n], nn_finder=nn_finder, nb_q=nb_q)
+        Z_hat = y_pred[n]
 
-    tmp = v_copy(Z)
-    tmp = tmp.reshape(Z.shape[0], Z.shape[1])
+        sum2 = 0
+        # for h in range(Z.shape[0]):
+        #     for w in range(Z.shape[1]):
+        #         # sum3 = 0
+        #         # for q in range(Z.shape[2]):
+        #         #     sum3 += Z[h, w, q] * np.log(Z_hat[h, w, q])
 
-    for h in range(Z.shape[0]):
-        for w in range(Z.shape[1]):
-            tmp[h, w] *= np.dot(Z[h, w], np.log(Z_hat[h, w]))
-    sum2 = np.sum(tmp)
+        #         sum3 = np.dot(Z[h, w], np.log(Z_hat[h, w]))
+        #         sum2 += v(Z_h_w=Z[h, w, :]) * sum3
 
-    return -1 * sum2
+        tmp = v_copy(Z)
+        tmp = tmp.reshape(Z.shape[0], Z.shape[1])
+
+        for h in range(Z.shape[0]):
+            for w in range(Z.shape[1]):
+                tmp[h, w] *= np.dot(Z[h, w], np.log(Z_hat[h, w]))
+        sum2 = np.sum(tmp)
+        loss.append(sum2)
+
+    return -1 * np.array(loss)
 
 
 # a = np.random.rand(27)
