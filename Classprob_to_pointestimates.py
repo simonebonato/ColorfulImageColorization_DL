@@ -25,24 +25,24 @@ def reconstruct_image(X, y_pred):
     """
     X: CNN input - L channel [batch_size x H x W x 1]
     y: CNN output - ab channels [batch_size x 64 x 64 x 2]
-    return: colored version of the image in RGB
+    return: colored version of the image in LAB
     """
     batch_size = X.shape[0]
     h, w = X.shape[1:3]
     output_imgs = np.zeros(shape=(batch_size, h, w, 3))
     for i in range(batch_size):
         y = prob_to_point_est(y_pred[i])
-        ab_resized = cv2.resize(y, (h, w, 2), cv2.INTER_CUBIC)
-        output_imgs[i, :, :, 0] = X
+        ab_resized = cv2.resize(y, (h, w), cv2.INTER_CUBIC)
+        output_imgs[i, :, :, 0] = X[i, :, :, 0]
         output_imgs[i, :, :, 1:] = ab_resized
     return output_imgs
 
 # q_ab = np.load("pts_in_hull.npy")
 # nb_q = q_ab.shape[0]
 #
-probs = np.random.rand(256, 256, 313)
-for i in range(probs.shape[0]):
-    for y in range(probs.shape[1]):
-        probs[i, y, :] /= np.sum(probs[i, y, :])
-
-image_out = reconstruct_image(pro)
+# probs = np.random.rand(256, 256, 313)
+# for i in range(probs.shape[0]):
+#     for y in range(probs.shape[1]):
+#         probs[i, y, :] /= np.sum(probs[i, y, :])
+#
+# image_out = reconstruct_image(pro)
