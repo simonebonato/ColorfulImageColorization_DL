@@ -14,43 +14,37 @@ from loss_function import *
 from image_generator import *
 from cnn_model import *
 
+
 @tf.autograph.experimental.do_not_convert
 def main():
     input_shape = (256, 256)
     batch_size = 8
     train_path = 'data/train'
     val_path = 'data/val'
-    
-    
+
     partition = {'train': (get_partitions(train_path, val_path))[0],
-                    'val': (get_partitions(train_path, val_path))[1]}
+                 'val': (get_partitions(train_path, val_path))[1]}
     params = {'dim': input_shape,
-                'batch_size': batch_size,
-                'n_channels': (1, 2),
-                'shuffle': False}
+              'batch_size': batch_size,
+              'n_channels': (1, 2),
+              'shuffle': False}
     training_generator = DataGenerator(partition['train'], **params)
     validation_generator = DataGenerator(partition['val'], **params)
 
-
-
     model = CNN(input_shape, batch_size).get_model()
     model_saver = ModelCheckpoint(filepath='Best_Model', monitor='val_loss',
-                                      save_best_only=True, mode='min')
+                                  save_best_only=True, mode='min')
     model.fit(
-            x = training_generator, 
-            epochs = 5,
-            validation_data = validation_generator, 
-            callbacks=[model_saver],
-            workers=1,
-            use_multiprocessing=False)
-
+        x=training_generator,
+        epochs=5,
+        validation_data=validation_generator,
+        callbacks=[model_saver],
+        workers=1,
+        use_multiprocessing=False)
 
     test = training_generator.__getitem__(0)
     test_X, test_Y = test[0], test[1]
     y_pred = model.predict(test_X)
-    
-
-    
 
 
 if __name__ == '__main__':
