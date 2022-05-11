@@ -74,10 +74,12 @@ def v_copy(Z):
     w = ((1 - lambdaa) * p_hat + lambdaa / Q) ** -1
 
     # Normalize w so that expected value is 1
-    norm = np.zeros((Z.shape[0], Z.shape[1]))
-    for q in range(Q):
-        norm += p_hat[:, :, q] * w[:, :, q]
+    # norm = np.zeros((Z.shape[0], Z.shape[1]))
+    # for q in range(Q):
+    #     norm += p_hat[:, :, q] * w[:, :, q]
 
+    # Normalize w so that expected value is 1
+    norm = np.sum(p_hat[:, :] * w[:, :], axis=-1)
     norm = norm.reshape(Z.shape[0], Z.shape[1], 1)
     norm = np.tile(norm, (1, 1, Z.shape[-1]))
     w = w / norm
@@ -86,27 +88,27 @@ def v_copy(Z):
 
 
 def L_cl(y_true, y_pred):
-    # y_true is batchsizexHxWx2 (ab without L component of image), y_pred is batchsizexHxWxQ (predicted prob distri)
+    """
+    y_true: batch_size x 64 x 64 x 2 from Generator
+    y_pred: batch_size x H x W x 313 from CNN
+    """
+
     """TODO: make sure this works for batches of data"""
-    # print(f'y_true shape: {y_true.shape}')
-    # print(f'y_pred shape: {y_pred.shape}')
-
     batch_size = y_true.shape[0]
-    loss = []
+    loss = 0
 
-    # Load the array of quantized ab value
+    # Load the array of quantized ab values
     q_ab = np.load("pts_in_hull.npy")
     nb_q = q_ab.shape[0]
-
     # Fit a NN to q_ab
     nn_finder = nn.NearestNeighbors(n_neighbors=5, algorithm='ball_tree').fit(q_ab)
 
     for n in range(batch_size):
-
+        # takes y_true[n] and returns 64 x 64 x 313 soft encoded version
         Z = soft_encoding(image_ab=y_true[n], nn_finder=nn_finder, nb_q=nb_q)
         Z_hat = y_pred[n]
 
-        sum2 = 0
+        # sum2 = 0
         # for h in range(Z.shape[0]):
         #     for w in range(Z.shape[1]):
         #         # sum3 = 0
@@ -116,17 +118,23 @@ def L_cl(y_true, y_pred):
         #         sum3 = np.dot(Z[h, w], np.log(Z_hat[h, w]))
         #         sum2 += v(Z_h_w=Z[h, w, :]) * sum3
 
-        tmp = v_copy(Z)
-        tmp = tmp.reshape(Z.shape[0], Z.shape[1])
+        # class re-balancing for Z, returns 64 x 64 x 1 to rebal. the weights
+        # one probability value for each pixel
+        v_Z = v_copy(Z)
+        v_Z = v_Z.reshape(Z.shape[0], Z.shape[1])
 
         for h in range(Z.shape[0]):
             for w in range(Z.shape[1]):
-                tmp[h, w] *= np.dot(Z[h, w], np.log(Z_hat[h, w]))
-        sum2 = np.sum(tmp)
-        loss.append(sum2)
+                v_Z[h, w] *= np.dot(Z[h, w], np.log(Z_hat[h, w]))
+        print(v_Z[0, 0])
 
-    return -1 * np.array(loss)
+        v_Z = v_copy(Z)
+        v_Z = v_Z.reshape(Z.shape[0], Z.shape[1])
+        v_Z *= np.dot(Z, np.log(Z_hat))
+        print(v_Z[0, 0])
 
+        loss += np.sum(v_Z)
+    return -1 * loss
 
 # a = np.random.rand(27)
 # a = a.reshape(3,3,3)
