@@ -5,7 +5,7 @@ from PIL import Image
 # from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 import os
-from Loss_func import *
+from loss_function import *
 from skimage import io, color
 
 

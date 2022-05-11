@@ -7,11 +7,11 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.keras.layers import Conv2D, BatchNormalization, Conv2DTranspose, InputLayer, UpSampling2D
 from tensorflow.keras.models import Sequential
-from adam_class import AdamWeightDecayOptimizer
+from custom_adam import AdamWeightDecayOptimizer
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
 from tensorflow.keras.callbacks import ModelCheckpoint
-from Loss_func import *
-from image_gen import *
+from loss_function import *
+from image_generator import *
 
 
 class CNN:
@@ -23,14 +23,16 @@ class CNN:
         self.input_shape = input_shape
         self.batch_size = batch_size
 
-        self.get_generators()
 
+    def get_model(self):
+        
         self.model = Sequential()
         self.model.add(InputLayer(
             input_shape=(*self.input_shape, 1),
             batch_size=self.batch_size,
             name='input',
         ))
+
 
         # see Table 4 - page 24
         # C : number of filters
@@ -73,7 +75,7 @@ class CNN:
             ('conv_out', 313, 1, 1, 1, False, 'softmax')
 
         )
-        """TODO: watch their structure: https://github.com/foamliu/Colorful-Image-Colorization/blob/master/model.py"""
+
         for (label, C, S, D, K, BN, activation) in conv_layers:
             if S >= 1:
                 self.model.add(Conv2D(
@@ -122,25 +124,7 @@ class CNN:
         self.model.compile(loss=L_cl, optimizer=adam_weight, run_eagerly=True)
         print(self.model.summary())
 
-        model_saver = ModelCheckpoint(filepath='Best_Model', monitor='val_loss',
-                                      save_best_only=True, mode='min')
-        self.model.fit(x=self.training_generator, epochs=5,
-                       validation_data=self.validation_generator, callbacks=[model_saver])
-
-    def get_generators(self):
-        train_path = 'data/train'
-        val_path = 'data/val'
-        partition = {'train': (get_partitions(train_path, val_path))[0],
-                     'val': (get_partitions(train_path, val_path))[1]}
-
-        params = {'dim': self.input_shape,
-                  'batch_size': self.batch_size,
-                  'n_channels': (1, 2),
-                  'shuffle': False}
-
-        self.training_generator = DataGenerator(partition['train'], **params)
-        self.validation_generator = DataGenerator(partition['val'], **params)
+        return self.model
+    
 
 
-if __name__ == '__main__':
-    m = CNN()

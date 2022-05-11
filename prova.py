@@ -1,4 +1,4 @@
-from image_gen import *
+from image_generator import *
 
 g = custom_data_gen('data/train', batch_size=1)
 for i in g:
