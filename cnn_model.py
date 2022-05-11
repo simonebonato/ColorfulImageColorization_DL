@@ -15,13 +15,14 @@ from image_generator import *
 
 
 class CNN:
-    def __init__(self, input_shape=(256, 256), batch_size=1):
+    def __init__(self, input_shape=(256, 256), batch_size=1, init_lr = 3e-5):
         '''
         input_shape: tuple indicating the desired shape of the input
         batch_size: number of samples for each batch of training
         '''
         self.input_shape = input_shape
         self.batch_size = batch_size
+        self.init_lr = init_lr
 
 
     def get_model(self):
@@ -119,7 +120,7 @@ class CNN:
         # ))
         # self.model.add(UpSampling2D(size=(4, 4), interpolation='bilinear', name='upsample'))
 
-        lr = ExponentialDecay(initial_learning_rate=3e-5, decay_steps=10, decay_rate=0.01)
+        lr = ExponentialDecay(initial_learning_rate=self.init_lr, decay_steps=10, decay_rate=0.01)
         adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10 ** -3)
         self.model.compile(loss=L_cl, optimizer=adam_weight, run_eagerly=True)
         print(self.model.summary())

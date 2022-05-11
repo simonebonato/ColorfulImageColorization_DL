@@ -17,7 +17,7 @@ from cnn_model import *
 @tf.autograph.experimental.do_not_convert
 def main():
     input_shape = (256, 256)
-    batch_size = 2
+    batch_size = 8
     train_path = 'data/train'
     val_path = 'data/val'
     
@@ -40,8 +40,17 @@ def main():
             x = training_generator, 
             epochs = 5,
             validation_data = validation_generator, 
-            callbacks=[model_saver])
+            callbacks=[model_saver],
+            workers=1,
+            use_multiprocessing=False)
 
+
+    test = training_generator.__getitem__(0)
+    test_X, test_Y = test[0], test[1]
+    y_pred = model.predict(test_X)
+    
+
+    
 
 
 if __name__ == '__main__':
