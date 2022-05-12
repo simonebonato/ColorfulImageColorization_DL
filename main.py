@@ -23,6 +23,8 @@ def main():
     train_path = 'data/train'
     val_path = 'data/val'
 
+    load_model = True
+
     partition = {'train': (get_partitions(train_path, val_path))[0],
                  'val': (get_partitions(train_path, val_path))[1]}
     params = {'dim': input_shape,
@@ -32,24 +34,24 @@ def main():
     training_generator = DataGenerator(partition['train'], **params)
     validation_generator = DataGenerator(partition['val'], **params)
 
-
-
-    model = CNN(input_shape, batch_size).get_model()
-    model_saver = ModelCheckpoint(filepath='Best_Model', monitor='val_loss',
-                                  save_best_only=True, mode='min')
-    model.fit(
-        x=training_generator,
-        epochs=20,
-        validation_data=validation_generator,
-        callbacks=[model_saver],
-        workers=1,
-        use_multiprocessing=False)
+    if load_model:
+        model = tf.keras.models.load_model(r'Best_Model')
+    else:
+        model = CNN(input_shape, batch_size).get_model()
+        model_saver = ModelCheckpoint(filepath='Best_Model', monitor='val_loss',
+                                      save_best_only=True, mode='min')
+        model.fit(
+            x=training_generator,
+            epochs=20,
+            validation_data=validation_generator,
+            callbacks=[model_saver],
+            workers=1,
+            use_multiprocessing=False)
 
 
     test = training_generator.__getitem__(0)
     test_X, test_Y = test[0], test[1]
     y_pred = model.predict(test_X)
-    print(y_pred.shape)
     rec = reconstruct_image(test_X, y_pred)
     plot_image_from_Lab(rec[0])
 
