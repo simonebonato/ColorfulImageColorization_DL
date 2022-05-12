@@ -1,6 +1,12 @@
 import numpy as np
 import sklearn.neighbors as nn
 
+# Load the array of quantized ab values
+q_ab = np.load("pts_in_hull.npy")
+nb_q = q_ab.shape[0]
+# Fit a NN to q_ab
+nn_finder = nn.NearestNeighbors(n_neighbors=5, algorithm='ball_tree').fit(q_ab)
+
 
 def soft_encoding(image_ab, nn_finder, nb_q):
     Z_list = [None]*image_ab.shape[0]
@@ -67,12 +73,6 @@ def L_cl(y_true, y_pred):
     """TODO: make sure this works for batches of data"""
     batch_size = y_true.shape[0]
     loss = 0
-
-    # Load the array of quantized ab values
-    q_ab = np.load("pts_in_hull.npy")
-    nb_q = q_ab.shape[0]
-    # Fit a NN to q_ab
-    nn_finder = nn.NearestNeighbors(n_neighbors=5, algorithm='ball_tree').fit(q_ab)
 
     # takes y_true[n] and returns b_size x 64 x 64 x 313 soft encoded version
     Z = soft_encoding(image_ab=y_true, nn_finder=nn_finder, nb_q=nb_q)
