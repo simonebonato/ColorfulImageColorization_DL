@@ -33,7 +33,7 @@ def reconstruct_image(X, y_pred):
     for i in range(batch_size):
         y = prob_to_point_est(y_pred[i])
         ab_resized = cv2.resize(y, (h, w), cv2.INTER_CUBIC)
-        output_imgs[i, :, :, 0] = X[i, :, :, 0]
+        output_imgs[i, :, :, 0] = np.squeeze(X[i])
         output_imgs[i, :, :, 1:] = ab_resized
     return output_imgs
 
