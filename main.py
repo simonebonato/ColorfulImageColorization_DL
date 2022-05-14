@@ -19,7 +19,7 @@ from Classprob_to_pointestimates import *
 @tf.autograph.experimental.do_not_convert
 def main():
     input_shape = (256, 256)
-    batch_size = 32
+    batch_size = 16
     train_path = 'data/train'
     val_path = 'data/val'
 
@@ -64,12 +64,12 @@ def main():
         initial_epoch=initial_epoch)
 
     # Check quality of one image
-    test = training_generator.__getitem__(0)
-    test_X, test_Y = test[0], test[1]
-    y_pred = model.predict(test_X)
+    # test = training_generator.__getitem__(0)
+    # test_X, test_Y = test[0], test[1]
+    # y_pred = model.predict(test_X)
 
-    images = reconstruct_image(X=test_X, y_pred=y_pred)
-    plot_image_from_Lab(img=images[0])
+    # images = reconstruct_image(X=test_X, y_pred=y_pred)
+    # plot_image_from_Lab(img=images[0])
 
 
 if __name__ == '__main__':

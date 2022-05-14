@@ -162,7 +162,8 @@ def L_cl2(y_true, y_pred):
 
     # class re-balancing for Z, returns 64 x 64 x 1 to rebal. the weights
     # one probability value for each pixel
-    v_Z = tensorflow.reshape(y_true, shape=(y_true.shape[0], y_true.shape[1], y_true.shape[2]))
+    tmp = v2(y_true)
+    v_Z = tensorflow.reshape(tmp, shape=(y_true.shape[0], y_true.shape[1], y_true.shape[2]))
     v_Z *= tensorflow.reduce_sum(y_true * tensorflow.math.log(y_pred), axis=-1)
 
     loss += tensorflow.reduce_sum(v_Z)
