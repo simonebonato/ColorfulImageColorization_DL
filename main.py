@@ -56,7 +56,7 @@ def main():
                                   save_best_only=True, mode='min')
     model.fit(
         x=training_generator,
-        epochs=15,
+        epochs=50,
         validation_data=validation_generator,
         callbacks=[model_saver],
         workers=1,
