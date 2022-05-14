@@ -47,8 +47,10 @@ def main():
         lr = ExponentialDecay(initial_learning_rate=3e-5, decay_steps=10, decay_rate=0.01)
         adam = Adam(beta_1=0.9, beta_2=0.99, learning_rate=lr)
         model.compile(loss=L_cl2, optimizer=adam, run_eagerly=True)
+        initial_epoch = 7
     else:
         model = CNN(input_shape, batch_size).get_model()
+        initial_epoch = 0
 
     model_saver = ModelCheckpoint(filepath='Best_Model', monitor='val_loss',
                                   save_best_only=True, mode='min')
@@ -59,7 +61,7 @@ def main():
         callbacks=[model_saver],
         workers=1,
         use_multiprocessing=False,
-        initial_epoch=7)
+        initial_epoch=initial_epoch)
 
     # Check quality of one image
     test = training_generator.__getitem__(0)
