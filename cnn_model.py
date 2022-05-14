@@ -66,7 +66,7 @@ class Custom_Seq(Sequential):
 
 
 class CNN:
-    def __init__(self, input_shape=(256, 256), batch_size=1, init_lr = 3e-5):
+    def __init__(self, input_shape=(256, 256), batch_size=1, init_lr=3e-5):
         '''
         input_shape: tuple indicating the desired shape of the input
         batch_size: number of samples for each batch of training
@@ -76,14 +76,13 @@ class CNN:
         self.init_lr = init_lr
 
     def get_model(self):
-        
+
         self.model = Custom_Seq()
         self.model.add(InputLayer(
             input_shape=(*self.input_shape, 1),
             batch_size=self.batch_size,
             name='input',
         ))
-
 
         # see Table 4 - page 24
         # C : number of filters
@@ -177,6 +176,3 @@ class CNN:
         print(self.model.summary())
 
         return self.model
-    
-
-

@@ -11,7 +11,7 @@ nn_finder = nn.NearestNeighbors(n_neighbors=5, algorithm='ball_tree').fit(q_ab)
 
 
 def soft_encoding(image_ab, nn_finder, nb_q):
-    Z_list = [None]*image_ab.shape[0]
+    Z_list = [None] * image_ab.shape[0]
 
     for n in range(image_ab.shape[0]):
         h, w = image_ab[n].shape[:2]
@@ -41,7 +41,7 @@ def soft_encoding(image_ab, nn_finder, nb_q):
 
 
 def soft_encoding2(image_ab, nn_finder, nb_q):
-    Z_list = [None]*image_ab.shape[0]
+    Z_list = [None] * image_ab.shape[0]
 
     for n in range(image_ab.shape[0]):
         h, w = image_ab[n].shape[:2]
@@ -143,11 +143,11 @@ def L_cl(y_true, y_pred):
     # one probability value for each pixel
     v_Z = v(y_true)
     v_Z = v_Z.reshape(y_true.shape[0], y_true.shape[1], y_true.shape[2])
-    v_Z *= (y_true * np.log(y_pred)).sum(axis = -1)
+    v_Z *= (y_true * np.log(y_pred)).sum(axis=-1)
 
     loss += np.sum(v_Z)
     # print(loss)
-    return -1 * loss/1
+    return -1 * loss / 1
 
 
 def L_cl2(y_true, y_pred):
@@ -167,5 +167,4 @@ def L_cl2(y_true, y_pred):
 
     loss += tensorflow.reduce_sum(v_Z)
 
-    return -1 * loss/batch_size
-
+    return -1 * loss / batch_size
