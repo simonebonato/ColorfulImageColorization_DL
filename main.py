@@ -44,7 +44,7 @@ def main():
         custom_objects = {'Custom_Seq': Custom_Seq, 'L_cl2': L_cl2, 'soft_encoding2': soft_encoding2, 'v2': v2}
         model = tf.keras.models.load_model(filepath='Best_Model', custom_objects=custom_objects, compile=False)
 
-        lr = ExponentialDecay(initial_learning_rate=3e-5, decay_steps=10, decay_rate=0.01)
+        lr = ExponentialDecay(initial_learning_rate=3e-5, decay_steps=10, decay_rate=0.8)
         adam = Adam(beta_1=0.9, beta_2=0.99, learning_rate=lr)
         model.compile(loss=L_cl2, optimizer=adam, run_eagerly=True)
         initial_epoch = 7
