@@ -170,7 +170,7 @@ class CNN:
         # self.model.add(UpSampling2D(size=(4, 4), interpolation='bilinear', name='upsample'))
 
         lr = ExponentialDecay(initial_learning_rate=self.init_lr, decay_steps=40623, decay_rate=0.8)
-        adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10 ** -3)
+        # adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10 ** -3)
         adam = Adam(beta_1=0.9, beta_2=0.99, learning_rate=lr)
         self.model.compile(loss=L_cl2, optimizer=adam, run_eagerly=True)
         print(self.model.summary())
