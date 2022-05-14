@@ -24,7 +24,7 @@ class Custom_Seq(Sequential):
         x, y_true = data
 
         y_true = soft_encoding2(image_ab=y_true, nn_finder=nn_finder, nb_q=nb_q)
-        y_true = v2(y_true)
+        # y_true = v2(y_true)
         # y_true = tf.convert_to_tensor(y_true)
 
         with GradientTape() as tape:
@@ -50,7 +50,7 @@ class Custom_Seq(Sequential):
         x, y_true = data
 
         y_true = soft_encoding2(image_ab=y_true, nn_finder=nn_finder, nb_q=nb_q)
-        y_true = v2(y_true)
+        # y_true = v2(y_true)
         # y_true = tf.convert_to_tensor(y_true)
 
         y_pred = self(x, training=False)  # Forward pass
