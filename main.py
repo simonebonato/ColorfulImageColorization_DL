@@ -28,7 +28,7 @@ def main():
     params = {'dim': input_shape,
               'batch_size': batch_size,
               'n_channels': (1, 2),
-              'shuffle': False}
+              'shuffle': True}
     training_generator = DataGenerator(partition['train'], **params)
     validation_generator = DataGenerator(partition['val'], **params)
 
@@ -64,12 +64,12 @@ def main():
         initial_epoch=initial_epoch)
 
     # Check quality of one image
-    # test = training_generator.__getitem__(0)
-    # test_X, test_Y = test[0], test[1]
-    # y_pred = model.predict(test_X)
+    test = training_generator.__getitem__(0)
+    test_X, test_Y = test[0], test[1]
+    y_pred = model.predict(test_X)
 
-    # images = reconstruct_image(X=test_X, y_pred=y_pred)
-    # plot_image_from_Lab(img=images[0])
+    images = reconstruct_image(X=test_X, y_pred=y_pred)
+    plot_image_from_Lab(img=images[0])
 
 
 if __name__ == '__main__':
