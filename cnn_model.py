@@ -6,6 +6,7 @@ import tensorflow as tf
 
 import numpy as np
 from tensorflow.keras.layers import Conv2D, BatchNormalization, Conv2DTranspose, InputLayer, UpSampling2D
+from tensorflow.keras.regularizers import L2
 from tensorflow.keras.models import Sequential
 from tensorflow import GradientTape
 from custom_adam import AdamWeightDecayOptimizer
@@ -29,6 +30,7 @@ class Custom_Seq(Sequential):
 
         with GradientTape() as tape:
             y_pred = self(x, training=True)  # Forward pass
+            y_pred = tf.nn.softmax(y_pred)
 
             # Compute the loss value
             # (the loss function is configured in `compile()`)
@@ -54,6 +56,7 @@ class Custom_Seq(Sequential):
         # y_true = tf.convert_to_tensor(y_true)
 
         y_pred = self(x, training=False)  # Forward pass
+        y_pred = tf.nn.softmax(y_pred)
 
         # Compute the loss value
         # (the loss function is configured in `compile()`)
@@ -122,7 +125,7 @@ class CNN:
             ('conv8_2', 256, 1, 1, 3, False, 'relu'),
             ('conv8_3', 256, 1, 1, 3, False, 'relu'),
 
-            ('conv_out', 313, 1, 1, 1, False, 'softmax')
+            ('conv_out', 313, 1, 1, 1, False, None)
 
         )
 
@@ -136,7 +139,8 @@ class CNN:
                     activation=activation,
                     padding='same',  # if P else 'valid',
                     name=label,
-                    use_bias=True
+                    use_bias=True,
+                    kernel_regularizer=L2(10e-3)
                 ))
             else:
                 self.model.add(UpSampling2D(size=(2, 2), name='upsample'))
@@ -171,7 +175,7 @@ class CNN:
 
         lr = ExponentialDecay(initial_learning_rate=self.init_lr, decay_steps=40623, decay_rate=0.8)
         #adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10 ** -3)
-        adam = Adam(beta_1=0.9, beta_2=0.99, learning_rate=lr)
+        adam = Adam(beta_1=0.9, beta_2=0.99, learning_rate=lr, clipvalue=5)
         self.model.compile(loss=L_cl2, optimizer=adam, run_eagerly=True)
         print(self.model.summary())
 
