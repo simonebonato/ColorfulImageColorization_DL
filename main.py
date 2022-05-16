@@ -47,7 +47,7 @@ def main():
         lr = ExponentialDecay(initial_learning_rate=3e-5, decay_steps=40623, decay_rate=0.8)
         adam = Adam(beta_1=0.9, beta_2=0.99, learning_rate=lr, clipvalue=5)
         model.compile(loss=L_cl2, optimizer=adam, run_eagerly=True)
-        initial_epoch = 13
+        initial_epoch = 7
     else:
         model = CNN(input_shape, batch_size).get_model()
         initial_epoch = 0
