@@ -19,7 +19,7 @@ def get_ab(image):
     return lab
 
 
-def plot_image_from_Lab(img, grayscale=False, from_L=False):
+def plot_image_from_Lab(img, grayscale=False, from_L=False, gt=False):
     """if we want to plot only the L channel
     then we have to set a and b to zero
     then convert to rgb and plot!"""
@@ -32,7 +32,8 @@ def plot_image_from_Lab(img, grayscale=False, from_L=False):
         img[:, :, 1:] = 0 * ab
     img = color.lab2rgb(img)
     plt.imshow(img)
-    plt.show()
+    if not gt:
+        plt.show()
 
 
 def load_images_from_folder(folder):

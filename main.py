@@ -69,8 +69,15 @@ def main():
     y_pred = model.predict(test_X)
     y_pred = tf.nn.softmax(y_pred)
 
+    gt_images = reconstruct_gt_image(X=test_X, y_true=test_Y)
     images = reconstruct_image(X=test_X, y_pred=y_pred)
+
     for i in range(images.shape[0]):
+        plt.subplot(1, 2, 1)
+        plt.title('Ground Truth Image')
+        plot_image_from_Lab(img=gt_images[i], gt=True)
+        plt.subplot(1, 2, 2)
+        plt.title('Model Image')
         plot_image_from_Lab(img=images[i])
 
 
