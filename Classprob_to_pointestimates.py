@@ -37,6 +37,24 @@ def reconstruct_image(X, y_pred):
         output_imgs[i, :, :, 1:] = ab_resized
     return output_imgs
 
+
+def reconstruct_gt_image(X, y_true):
+    """
+    X: CNN input - L channel [batch_size x H x W x 1]
+    y: CNN output - ab channels [batch_size x 64 x 64 x 2]
+    return: colored version of the image in LAB
+    """
+    batch_size = X.shape[0]
+    h, w = X.shape[1:3]
+    output_imgs = np.zeros(shape=(batch_size, h, w, 3))
+    for i in range(batch_size):
+        y = y_true[i]
+        ab_resized = cv2.resize(y, (h, w), cv2.INTER_CUBIC)
+        output_imgs[i, :, :, 0] = np.squeeze(X[i])
+        output_imgs[i, :, :, 1:] = ab_resized
+    return output_imgs
+
+
 # q_ab = np.load("pts_in_hull.npy")
 # nb_q = q_ab.shape[0]
 #
