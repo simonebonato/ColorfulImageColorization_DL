@@ -19,7 +19,7 @@ from Classprob_to_pointestimates import *
 @tf.autograph.experimental.do_not_convert
 def main():
     input_shape = (256, 256)
-    batch_size = 16
+    batch_size = 32
     train_path = 'data/train'
     val_path = 'data/val'
 
@@ -45,9 +45,9 @@ def main():
         model = tf.keras.models.load_model(filepath='Best_Model', custom_objects=custom_objects, compile=False)
 
         lr = ExponentialDecay(initial_learning_rate=3e-5, decay_steps=40623, decay_rate=0.8)
-        adam = Adam(beta_1=0.9, beta_2=0.99, learning_rate=lr)
+        adam = Adam(beta_1=0.9, beta_2=0.99, learning_rate=lr, clipvalue=5)
         model.compile(loss=L_cl2, optimizer=adam, run_eagerly=True)
-        initial_epoch = 7
+        initial_epoch = 13
     else:
         model = CNN(input_shape, batch_size).get_model()
         initial_epoch = 0
@@ -63,13 +63,15 @@ def main():
         use_multiprocessing=False,
         initial_epoch=initial_epoch)
 
-    # Check quality of one image
+    # Check quality of images
     test = training_generator.__getitem__(0)
     test_X, test_Y = test[0], test[1]
     y_pred = model.predict(test_X)
+    y_pred = tf.nn.softmax(y_pred)
 
     images = reconstruct_image(X=test_X, y_pred=y_pred)
-    plot_image_from_Lab(img=images[0])
+    for i in range(images.shape[0]):
+        plot_image_from_Lab(img=images[i])
 
 
 if __name__ == '__main__':
