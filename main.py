@@ -19,9 +19,10 @@ from Classprob_to_pointestimates import *
 @tf.autograph.experimental.do_not_convert
 def main():
     input_shape = (256, 256)
-    batch_size = 32
+    batch_size = 8
     train_path = 'data/train'
     val_path = 'data/val'
+    saver_name = 'Smaller_Model'
 
     partition = {'train': (get_partitions(train_path, val_path))[0],
                  'val': (get_partitions(train_path, val_path))[1]}
@@ -34,7 +35,7 @@ def main():
 
     # Check if a model is already stored
     for file in os.listdir():
-        if file == 'Best_Model':
+        if file == saver_name:
             model_exists = True
             break
         else:
@@ -42,7 +43,7 @@ def main():
 
     if model_exists:
         custom_objects = {'Custom_Seq': Custom_Seq, 'L_cl2': L_cl2, 'soft_encoding2': soft_encoding2, 'v2': v2}
-        model = tf.keras.models.load_model(filepath='Best_Model', custom_objects=custom_objects, compile=False)
+        model = tf.keras.models.load_model(filepath=saver_name, custom_objects=custom_objects, compile=False)
 
         lr = ExponentialDecay(initial_learning_rate=3e-5, decay_steps=40623, decay_rate=0.8)
         adam = Adam(beta_1=0.9, beta_2=0.99, learning_rate=lr, clipvalue=5)
@@ -52,7 +53,7 @@ def main():
         model = CNN(input_shape, batch_size).get_model()
         initial_epoch = 0
 
-    model_saver = ModelCheckpoint(filepath='Best_Model', monitor='val_loss',
+    model_saver = ModelCheckpoint(filepath=saver_name, monitor='val_loss',
                                   save_best_only=True, mode='min')
     model.fit(
         x=training_generator,
