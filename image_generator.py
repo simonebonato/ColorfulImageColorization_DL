@@ -33,6 +33,7 @@ def plot_image_from_Lab(img, grayscale=False, from_L=False, gt=False, savename=N
     img = color.lab2rgb(img)
     plt.imshow(img)
     if not gt:
+        plt.savefig(savename)
         plt.show()
 
 
