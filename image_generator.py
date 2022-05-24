@@ -19,7 +19,7 @@ def get_ab(image):
     return lab
 
 
-def plot_image_from_Lab(img, grayscale=False, from_L=False, gt=False):
+def plot_image_from_Lab(img, grayscale=False, from_L=False, gt=False, savename=None):
     """if we want to plot only the L channel
     then we have to set a and b to zero
     then convert to rgb and plot!"""
