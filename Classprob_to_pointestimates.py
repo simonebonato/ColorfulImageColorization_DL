@@ -3,6 +3,11 @@ import cv2
 
 
 def prob_to_point_est(Z, T=0.38):
+    """
+    Z: 2D array of probabilities
+    T: threshold
+    return: 2D array of point estimates
+    """
     q_ab = np.load("pts_in_hull.npy")
 
     # Z is a vector with dims [64, 64, Q=313]
@@ -54,13 +59,3 @@ def reconstruct_gt_image(X, y_true):
         output_imgs[i, :, :, 1:] = ab_resized
     return output_imgs
 
-
-# q_ab = np.load("pts_in_hull.npy")
-# nb_q = q_ab.shape[0]
-#
-# probs = np.random.rand(256, 256, 313)
-# for i in range(probs.shape[0]):
-#     for y in range(probs.shape[1]):
-#         probs[i, y, :] /= np.sum(probs[i, y, :])
-#
-# image_out = reconstruct_image(pro)

@@ -19,6 +19,7 @@ from image_generator import *
 
 # Customize how fit() method runs
 class Custom_Seq(Sequential):
+
     def train_step(self, data):
         # Unpack the data. Its structure depends on your model and
         # on what you pass to `fit()`.
@@ -52,8 +53,6 @@ class Custom_Seq(Sequential):
         x, y_true = data
 
         y_true = soft_encoding2(image_ab=y_true, nn_finder=nn_finder, nb_q=nb_q)
-        # y_true = v2(y_true)
-        # y_true = tf.convert_to_tensor(y_true)
 
         y_pred = self(x, training=False)  # Forward pass
         y_pred = tf.nn.softmax(y_pred)
@@ -158,23 +157,8 @@ class CNN:
             if BN:
                 self.model.add(BatchNormalization(name=f'BN_{label[4]}'))
 
-        """TODO: add the layers to the conv_ayers above"""
-        """add these to get an output with dims [1, 256, 256, 2]"""
-        # self.model.add(Softmax(axis=-1, name='softmax'))
-        # self.model.add(Conv2D(
-        #     filters=2,
-        #     kernel_size=(1, 1),
-        #     strides=1,
-        #     dilation_rate=1,
-        #     activation='relu',
-        #     padding='same',  # if P else 'valid',
-        #     name='dunno',
-        #     use_bias=False
-        # ))
-        # self.model.add(UpSampling2D(size=(4, 4), interpolation='bilinear', name='upsample'))
-
         lr = ExponentialDecay(initial_learning_rate=self.init_lr, decay_steps=40623, decay_rate=0.8)
-        #adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10 ** -3)
+        # adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10 ** -3)
         adam = Adam(beta_1=0.9, beta_2=0.99, learning_rate=lr, clipvalue=5)
         self.model.compile(loss=L_cl2, optimizer=adam, run_eagerly=True)
         print(self.model.summary())

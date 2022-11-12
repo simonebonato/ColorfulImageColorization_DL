@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from cnn_model import *
 from Classprob_to_pointestimates import *
+from cnn_model import *
 
 
 @tf.autograph.experimental.do_not_convert
@@ -15,10 +15,12 @@ def main():
 
     partition = {'train': (get_partitions(train_path, val_path))[0],
                  'val': (get_partitions(train_path, val_path))[1]}
+
     params = {'dim': input_shape,
               'batch_size': batch_size,
               'n_channels': (1, 2),
               'shuffle': True}
+
     training_generator = DataGenerator(partition['train'], **params)
     validation_generator = DataGenerator(partition['val'], **params)
 
@@ -44,14 +46,15 @@ def main():
 
     model_saver = ModelCheckpoint(filepath=saver_name, monitor='val_loss',
                                   save_best_only=True, mode='min')
-    # model.fit(
-    #     x=training_generator,
-    #     epochs=50,
-    #     validation_data=validation_generator,
-    #     callbacks=[model_saver],
-    #     workers=1,
-    #     use_multiprocessing=False,
-    #     initial_epoch=initial_epoch)
+
+    model.fit(
+        x=training_generator,
+        epochs=50,
+        validation_data=validation_generator,
+        callbacks=[model_saver],
+        workers=1,
+        use_multiprocessing=False,
+        initial_epoch=initial_epoch)
 
     # Check quality of images
     test = training_generator.__getitem__(0)
@@ -77,8 +80,6 @@ def main():
 
         gt_positions.append(gt_pos)
 
-
-    print(gt_positions)
 
 
 if __name__ == '__main__':

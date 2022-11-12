@@ -45,7 +45,6 @@ def soft_encoding2(image_ab, nn_finder, nb_q):
 
     for n in range(image_ab.shape[0]):
         h, w = image_ab[n].shape[:2]
-        # print(f'image_ab shape: {image_ab.shape}')
         img_a = image_ab[n][:, :, 0]
         img_b = image_ab[n][:, :, 1]
 
@@ -82,7 +81,6 @@ def v(Z):
 
     # Estimated probability distribution for colors
     p = Z
-    # print(p.shape)
     # Smoothen distribution of estimated probability distribution for colors
     p_hat = np.exp(-p ** 2 / (2 * sigma ** 2))
     w = ((1 - lambdaa) * p_hat + lambdaa / Q) ** -1
