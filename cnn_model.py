@@ -1,8 +1,5 @@
-import cv2
-from tqdm import tqdm
-import tensorflow as tf
-import numpy as np
 
+import tensorflow as tf
 from tensorflow.keras.layers import Conv2D, BatchNormalization, InputLayer, UpSampling2D
 from tensorflow.keras.regularizers import L2
 from tensorflow.keras.models import Sequential
@@ -10,57 +7,47 @@ from tensorflow import GradientTape
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
 from tensorflow.keras.optimizers import Adam
 
-from loss_function import *
-from image_generator import *
-from custom_adam import AdamWeightDecayOptimizer
+from image_generator import soft_encoding2, nn_finder, nb_q, L_cl2
 
 # Customize how fit() method runs
 class Custom_Seq(Sequential):
 
     def train_step(self, data):
-        # Unpack the data. Its structure depends on your model and
-        # on what you pass to `fit()`.
+
         x, y_true = data
-
         y_true = soft_encoding2(image_ab=y_true, nn_finder=nn_finder, nb_q=nb_q)
-        # y_true = v2(y_true)
-        # y_true = tf.convert_to_tensor(y_true)
-
         with GradientTape() as tape:
             y_pred = self(x, training=True)  # Forward pass
             y_pred = tf.nn.softmax(y_pred)
 
             # Compute the loss value
-            # (the loss function is configured in `compile()`)
             loss = self.compiled_loss(y_true, y_pred, regularization_losses=self.losses)
 
         # Compute gradients
         trainable_vars = self.trainable_variables
         gradients = tape.gradient(loss, trainable_vars)
+
         # Update weights
         self.optimizer.apply_gradients(zip(gradients, trainable_vars))
+
         # Update metrics (includes the metric that tracks the loss)
         self.compiled_metrics.update_state(y_true, y_pred)
-        # Return a dict mapping metric names to current value
+
         return {m.name: m.result() for m in self.metrics}
 
     def test_step(self, data):
-        # Unpack the data. Its structure depends on your model and
-        # on what you pass to `fit()`.
-        x, y_true = data
 
+        x, y_true = data
         y_true = soft_encoding2(image_ab=y_true, nn_finder=nn_finder, nb_q=nb_q)
 
         y_pred = self(x, training=False)  # Forward pass
         y_pred = tf.nn.softmax(y_pred)
 
-        # Compute the loss value
-        # (the loss function is configured in `compile()`)
         self.compiled_loss(y_true, y_pred, regularization_losses=self.losses)
 
         # Update metrics (includes the metric that tracks the loss)
         self.compiled_metrics.update_state(y_true, y_pred)
-        # Return a dict mapping metric names to current value
+        
         return {m.name: m.result() for m in self.metrics}
 
 
@@ -140,22 +127,11 @@ class CNN:
                 ))
             else:
                 self.model.add(UpSampling2D(size=(2, 2), name='upsample'))
-                # self.model.add(Conv2DTranspose(
-                #     filters=C,
-                #     kernel_size=(K, K),
-                #     strides=int(1 / S),
-                #     dilation_rate=D,
-                #     activation=activation,
-                #     padding='same',  # if P else 'valid',
-                #     name=label,
-                #     use_bias=True
-                # ))
 
             if BN:
                 self.model.add(BatchNormalization(name=f'BN_{label[4]}'))
 
         lr = ExponentialDecay(initial_learning_rate=self.init_lr, decay_steps=40623, decay_rate=0.8)
-        # adam_weight = AdamWeightDecayOptimizer(beta_1=0.9, beta_2=0.99, learning_rate=lr, weight_decay_rate=10 ** -3)
         adam = Adam(beta_1=0.9, beta_2=0.99, learning_rate=lr, clipvalue=5)
         self.model.compile(loss=L_cl2, optimizer=adam, run_eagerly=True)
         print(self.model.summary())

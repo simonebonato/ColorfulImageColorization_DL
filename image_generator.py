@@ -1,12 +1,9 @@
 import cv2
 import tensorflow.keras.utils
 import numpy as np
-from PIL import Image
-# from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 import os
-from loss_function import *
-from skimage import io, color
+from skimage import color
 
 
 def get_L(image):
@@ -114,19 +111,3 @@ class DataGenerator(tensorflow.keras.utils.Sequence):
 
         return X, Y
 
-
-# train_path = 'data/train'
-# val_path = 'data/val'
-# partition = {'train': (get_partitions(train_path, val_path))[0], 'val': (get_partitions(train_path, val_path))[1]}
-#
-# params = {'dim': (256, 256),
-#           'batch_size': 10,
-#           'n_channels': (1, 2),
-#           'shuffle': False}
-#
-# training_generator = DataGenerator(partition['train'], **params)
-#
-# for i in training_generator:
-#     print(i[0].shape)
-#     print(i[1].shape)
-#     break
