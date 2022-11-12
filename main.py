@@ -71,10 +71,8 @@ def main():
         gt_pos = np.random.choice(positions)
         fake_pos = 1 if gt_pos == 2 else 2
         plt.subplot(1, 2, gt_pos)
-        # plt.title('Ground Truth Image')
         plot_image_from_Lab(img=gt_images[i], gt=True)
         plt.subplot(1, 2, fake_pos)
-        # plt.title('Model Image')
         plot_image_from_Lab(img=images[i], savename=f'{saver_name}/imgs/pic_{i}_{gt_pos}.png')
 
 
