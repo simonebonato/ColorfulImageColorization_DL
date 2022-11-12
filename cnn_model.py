@@ -1,21 +1,18 @@
 import cv2
-import matplotlib.pyplot as plt
-import os
 from tqdm import tqdm
 import tensorflow as tf
-
 import numpy as np
-from tensorflow.keras.layers import Conv2D, BatchNormalization, Conv2DTranspose, InputLayer, UpSampling2D
+
+from tensorflow.keras.layers import Conv2D, BatchNormalization, InputLayer, UpSampling2D
 from tensorflow.keras.regularizers import L2
 from tensorflow.keras.models import Sequential
 from tensorflow import GradientTape
-from custom_adam import AdamWeightDecayOptimizer
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import ModelCheckpoint
+
 from loss_function import *
 from image_generator import *
-
+from custom_adam import AdamWeightDecayOptimizer
 
 # Customize how fit() method runs
 class Custom_Seq(Sequential):
