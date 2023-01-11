@@ -1,4 +1,4 @@
-# Colorful Image Colorization (DD2424 Deep Learning in Data Scienc - Group Project)
+# Colorful Image Colorization (DD2424 Deep Learning in Data Science - Group Project)
 
 ## Introduction
 In this report, the main goal is replicate the results of the paper Colorful Image Colorization (R. Zhang, P. Isola, and A. A. Efros, “Colorful image colorization,” CoRR, vol. abs/1603.08511, 2016.) to produce plausible color versions of photographs given a grayscale input. 
